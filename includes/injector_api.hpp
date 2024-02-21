@@ -1,13 +1,13 @@
 #ifndef ELL_INJECTOR_API_HPP
 #define ELL_INJECTOR_API_HPP
 
-#define Library void*
-#define Symbol void*
-
 #include <string>
 
 namespace ell
 {
+    using Library = void *;
+    using Symbol = void *;
+
     class InjectorInterface
     {
     public:

@@ -24,19 +24,17 @@ namespace ell
         {
             return nullptr;
         }
-        libraries.insert(std::make_pair(name, handler));
+        libraries.try_emplace(name, handler);
         return handler;
     }
 
     const std::string &Injector::getName(Library lib)
     {
-        auto finded = std::find_if(
-            libraries.begin(),
-            libraries.end(),
-            [lib](const std::pair<std::string, Library> &p)
-            {
-                return p.second == lib;
-            });
+        auto search = [lib](const std::pair<std::string, Library> &p)
+        {
+            return p.second == lib;
+        };
+        auto finded = std::ranges::find_if(libraries, search);
         return (*finded).first;
     }
 
@@ -62,7 +60,7 @@ namespace ell
 
     void Injector::closeAllLib()
     {
-        for (std::pair<const std::string, Library> &lib : libraries)
+        for (const auto &lib : libraries)
         {
             closeLib(lib.second);
         }
