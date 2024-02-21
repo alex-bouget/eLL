@@ -7,16 +7,10 @@
 
 namespace ell
 {
-    struct LibraryDestroyer
-    {
-        Library lib = nullptr;
-        ~LibraryDestroyer();
-    };
-
     class Injector : public ell::InjectorInterface
     {
     private:
-        std::map<std::string, LibraryDestroyer, std::less<>> libraries;
+        std::map<std::string, Library, std::less<>> libraries;
 
     public:
         Injector() = default;
