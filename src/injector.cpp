@@ -7,9 +7,9 @@ namespace fs = std::experimental::filesystem;
 
 namespace ell
 {
-    Injector::~Injector()
-    {
-        closeAllLib();
+    LibraryDestroyer::~LibraryDestroyer() {
+        dlclose(lib);
+        lib = nullptr;
     }
 
     Library Injector::openLib(const std::string &path)
@@ -24,15 +24,15 @@ namespace ell
         {
             return nullptr;
         }
-        libraries.try_emplace(name, handler);
+        libraries.try_emplace(name, LibraryDestroyer(handler));
         return handler;
     }
 
     const std::string &Injector::getName(Library lib)
     {
-        auto search = [lib](const std::pair<std::string, Library> &p)
+        auto search = [lib](const std::pair<std::string, LibraryDestroyer> &p)
         {
-            return p.second == lib;
+            return p.second.lib == lib;
         };
         auto finded = std::ranges::find_if(libraries, search);
         return (*finded).first;
@@ -40,7 +40,7 @@ namespace ell
 
     Library Injector::getLib(const std::string &name)
     {
-        return libraries[name];
+        return libraries[name].lib;
     }
 
     Symbol Injector::getSymbol(Library lib, const std::string &symbol_name)
@@ -62,7 +62,7 @@ namespace ell
     {
         for (const auto &[name, lib] : libraries)
         {
-            closeLib(lib);
+            closeLib(lib.lib);
         }
     }
 
