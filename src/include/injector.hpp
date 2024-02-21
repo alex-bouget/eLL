@@ -10,19 +10,19 @@ namespace ell
     class Injector : public ell::InjectorInterface
     {
     private:
-        std::map<std::string, Library> libraries;
+        std::map<std::string, Library, std::less<>> libraries;
 
     public:
-        Injector();
-        ~Injector();
-        Library openLib(const std::string &path);
-        Library openLib(const std::string &path, const std::string &name);
-        const std::string &getName(Library lib);
-        Library getLib(const std::string &name);
-        Symbol getSymbol(Library lib, const std::string &function);
-        Symbol getSymbol(const std::string &name, const std::string &function);
+        Injector() = default;
+        ~Injector() override;
+        Library openLib(const std::string &path) override;
+        Library openLib(const std::string &path, const std::string &name) override;
+        const std::string &getName(Library lib) override;
+        Library getLib(const std::string &name) override;
+        Symbol getSymbol(Library lib, const std::string &function) override;
+        Symbol getSymbol(const std::string &name, const std::string &function) override;
         void closeAllLib();
-        void closeLib(Library lib);
+        void closeLib(Library lib) override;
     };
 }
 
