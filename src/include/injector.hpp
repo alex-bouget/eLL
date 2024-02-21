@@ -14,7 +14,7 @@ namespace ell
 
     public:
         Injector() = default;
-        ~Injector() override;
+        virtual ~Injector() override;
         Library openLib(const std::string &path) override;
         Library openLib(const std::string &path, const std::string &name) override;
         const std::string &getName(Library lib) override;

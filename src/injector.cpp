@@ -60,9 +60,9 @@ namespace ell
 
     void Injector::closeAllLib()
     {
-        for (const auto &lib : libraries)
+        for (const auto &[name, lib] : libraries)
         {
-            closeLib(lib.second);
+            closeLib(lib);
         }
     }
 
