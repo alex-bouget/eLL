@@ -2,21 +2,24 @@
 #define ELL_INJECTOR_HPP
 
 #include <string>
-#include <vector>
+#include <map>
 #include "injector_api.hpp"
 
 namespace ell
 {
-    class Injector : public ell::injectorInterface
+    class Injector : public ell::InjectorInterface
     {
     private:
-        std::vector<void *> libraries;
+        std::map<std::string, Library> libraries;
 
     public:
         Injector();
         ~Injector();
-        void *openLib(const std::string &path);
-        void *getSymbol(void *lib, const std::string &function);
+        Library openLib(const std::string &path);
+        Library openLib(const std::string &path, const std::string &name);
+        Library getLib(const std::string &name);
+        Symbol getSymbol(void *lib, const std::string &function);
+        Symbol getSymbol(const std::string &name, const std::string &function);
         void closeAllLib();
         void closeLib(void *lib);
     };

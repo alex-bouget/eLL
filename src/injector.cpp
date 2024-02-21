@@ -1,6 +1,9 @@
 #include "injector.hpp"
 #include <dlfcn.h>
 #include <algorithm>
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
 
 namespace ell
 {
@@ -13,14 +16,23 @@ namespace ell
         closeAllLib();
     }
 
-    void *Injector::openLib(const std::string &path)
+    Library Injector::openLib(const std::string &path)
+    {
+        return openLib(path, fs::path(path).filename());
+    }
+
+    Library Injector::openLib(const std::string &path, const std::string &name)
     {
         void* handler = dlopen(path.c_str(), RTLD_LAZY);
         if (!handler) {
             return nullptr;
         }
-        libraries.push_back(handler);
+        libraries.insert(std::pair<std::string, Library>(name, handler));
         return handler;
+
+    }
+    Library getLib(const std::string &name)
+    {
     }
 
     void *Injector::getSymbol(void *lib, const std::string &symbol_name)
